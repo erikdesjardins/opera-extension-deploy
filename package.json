@@ -1,0 +1,28 @@
+{
+  "name": "opera-extension-deploy",
+  "version": "0.1.0",
+  "description": "Deploy Opera extensions to the Opera Store. (hacky)",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erikdesjardins/opera-extension-deploy.git"
+  },
+  "author": "Erik Desjardins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/erikdesjardins/opera-extension-deploy/issues"
+  },
+  "homepage": "https://github.com/erikdesjardins/opera-extension-deploy#readme",
+  "devDependencies": {
+    "ava": "^0.18.1",
+    "coveralls": "^2.11.8",
+    "nyc": "^10.1.2",
+    "superagent-mock": "^3.2.0"
+  },
+  "dependencies": {
+    "superagent": "^3.4.1"
+  }
+}
