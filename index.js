@@ -66,20 +66,33 @@ module.exports = function deploy(options) {
 		})
 		// upload addon
 		.then(function() {
-			return request
-				.post('https://addons.opera.com/api/file-upload/')
-				.set('Accept', 'application/json; version=1.0')
-				.set('X-Csrftoken', (request.jar.getCookie('csrftoken', { path: '/' }) || {}).value)
-				.set('Referer', 'https://addons.opera.com/developer/package/' + id + '/?tab=versions')
-				.field('flowChunkNumber', 1)
-				.field('flowChunkSize', zip.length + 1)
-				.field('flowCurrentChunkSize', zip.length)
-				.field('flowTotalSize', zip.length)
-				.field('flowIdentifier', '__opera-ext-depl__')
-				.field('flowFilename', 'package.zip')
-				.field('flowRelativePath', 'package.zip')
-				.field('flowTotalChunks', 1)
-				.attach('file', zip, 'package.zip')
+			// 1 MB chunk size (conservative)
+			// I've seen [1048576, 1819438] chunks (yes, in that order, which is odd)
+			var CHUNK_SIZE = 1024 * 1024;
+
+			var requests = [];
+
+			var maxChunk = Math.ceil(zip.length / CHUNK_SIZE);
+			for (var i = 1; i <= maxChunk; ++i) {
+				var currentSlice = zip.slice((i - 1) * CHUNK_SIZE, i * CHUNK_SIZE);
+
+				requests.push(request
+					.post('https://addons.opera.com/api/file-upload/')
+					.set('Accept', 'application/json; version=1.0')
+					.set('X-Csrftoken', (request.jar.getCookie('csrftoken', { path: '/' }) || {}).value)
+					.set('Referer', 'https://addons.opera.com/developer/package/' + id + '/?tab=versions')
+					.field('flowChunkNumber', i)
+					.field('flowChunkSize', CHUNK_SIZE)
+					.field('flowCurrentChunkSize', currentSlice.length)
+					.field('flowTotalSize', zip.length)
+					.field('flowIdentifier', '__opera-ext-depl__')
+					.field('flowFilename', 'package.zip')
+					.field('flowRelativePath', 'package.zip')
+					.field('flowTotalChunks', maxChunk)
+					.attach('file', currentSlice, 'package.zip'));
+			}
+
+			return Promise.all(requests)
 				.then(function(response) {
 					// success
 				}, function(err) {

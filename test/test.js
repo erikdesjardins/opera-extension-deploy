@@ -132,7 +132,7 @@ test.serial('failing upload', async t => {
 	];
 
 	await t.throws(
-		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
+		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([1]) }),
 		'Failed to upload package: errorCode'
 	);
 
@@ -149,7 +149,7 @@ test.serial('failing addon info', async t => {
 	];
 
 	await t.throws(
-		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
+		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([1]) }),
 		'Failed to fetch addon info: errorCode'
 	);
 
@@ -167,7 +167,7 @@ test.serial('failing version creation', async t => {
 	];
 
 	await t.throws(
-		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
+		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([1]) }),
 		'Failed to create new version: errorCode'
 	);
 
@@ -186,7 +186,7 @@ test.serial('failing to submit for moderation', async t => {
 	];
 
 	await t.throws(
-		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
+		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([1]) }),
 		'Failed to submit for moderation: errorCode'
 	);
 
