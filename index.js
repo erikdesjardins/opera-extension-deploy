@@ -29,13 +29,14 @@ module.exports = function deploy(options) {
 		// fetch login page for csrf token and auth session cookie
 		.then(function() {
 			return request
-				.head('https://auth.opera.com/account/login')
+				.get('https://auth.opera.com/account/login')
 				.then(function(response) {
-					var csrfToken = response.headers['x-opera-csrf-token'];
+					// I really don't want to include an HTML parser...this is all a hack anyways, what's one more?
+					var csrfToken = (/name="csrfmiddlewaretoken" value="(\w+)"/).exec(response.text);
 					if (!csrfToken) {
 						throw new Error('No CSRF token found.');
 					}
-					return csrfToken;
+					return csrfToken[1];
 				}, function(err) {
 					throw new Error('Failed to fetch login page: ' + err.response.status);
 				});
@@ -43,10 +44,11 @@ module.exports = function deploy(options) {
 		// submit login for auth cookies
 		.then(function(csrfToken) {
 			return request
-				.post('https://auth.opera.com/account/login?service=auth')
+				.post('https://auth.opera.com/account/login')
+				.set('Referer', 'https://auth.opera.com/account/login')
 				.field('email', username)
 				.field('password', password)
-				.field('csrf_token', csrfToken)
+				.field('csrfmiddlewaretoken', csrfToken)
 				.then(function(response) {
 					// success
 					// even when login fails, this still responds with 200...
