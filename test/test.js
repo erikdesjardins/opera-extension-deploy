@@ -19,15 +19,13 @@ test.beforeEach(t => {
 		if (resp instanceof Error) throw resp;
 		else return resp;
 	};
+	const wrapText = (match, data) => ({ text: data });
 	const wrapData = (match, data) => ({ body: data });
 	const wrapHeaders = (match, data) => ({ headers: data });
 	t.context.mock = superagentMock(superagent, [{
 		pattern: '^https://auth.opera.com(/account/login)$',
 		fixtures: popRequest,
-		head: wrapHeaders,
-	}, {
-		pattern: '^https://auth.opera.com(/account/login\\?service=auth)$',
-		fixtures: popRequest,
+		get: wrapText,
 		post: wrapHeaders,
 	}, {
 		pattern: '^https://addons.opera.com(/developer/)$',
@@ -84,7 +82,18 @@ test.serial('failing login initial load', async t => {
 });
 
 test.serial('failing login csrf token', async t => {
-	t.context.responses = [{}];
+	t.context.responses = [''];
+
+	await t.throws(
+		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
+		'No CSRF token found.'
+	);
+
+	t.is(t.context.requests.length, 1);
+});
+
+test.serial('empty login csrf token', async t => {
+	t.context.responses = ['<input type="hidden" name="csrfmiddlewaretoken" value="" />'];
 
 	await t.throws(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
@@ -96,7 +105,7 @@ test.serial('failing login csrf token', async t => {
 
 test.serial('failing login', async t => {
 	t.context.responses = [
-		{ 'x-opera-csrf-token': 'foo' },
+		'<input type="hidden" name="csrfmiddlewaretoken" value="foo" />',
 		new ResponseError({}, 403)
 	];
 
@@ -110,7 +119,7 @@ test.serial('failing login', async t => {
 
 test.serial('failing versions page fetch', async t => {
 	t.context.responses = [
-		{ 'x-opera-csrf-token': 'foo' },
+		'<input type="hidden" name="csrfmiddlewaretoken" value="foo" />',
 		{},
 		new ResponseError({}, 403)
 	];
@@ -125,7 +134,7 @@ test.serial('failing versions page fetch', async t => {
 
 test.serial('failing upload', async t => {
 	t.context.responses = [
-		{ 'x-opera-csrf-token': 'foo' },
+		'<input type="hidden" name="csrfmiddlewaretoken" value="foo" />',
 		{},
 		{},
 		new ResponseError({ detail: 'errorCode' })
@@ -141,7 +150,7 @@ test.serial('failing upload', async t => {
 
 test.serial('failing addon info', async t => {
 	t.context.responses = [
-		{ 'x-opera-csrf-token': 'foo' },
+		'<input type="hidden" name="csrfmiddlewaretoken" value="foo" />',
 		{},
 		{},
 		{},
@@ -158,7 +167,7 @@ test.serial('failing addon info', async t => {
 
 test.serial('failing version creation', async t => {
 	t.context.responses = [
-		{ 'x-opera-csrf-token': 'foo' },
+		'<input type="hidden" name="csrfmiddlewaretoken" value="foo" />',
 		{},
 		{},
 		{},
@@ -176,7 +185,7 @@ test.serial('failing version creation', async t => {
 
 test.serial('failing to submit for moderation', async t => {
 	t.context.responses = [
-		{ 'x-opera-csrf-token': 'foo' },
+		'<input type="hidden" name="csrfmiddlewaretoken" value="foo" />',
 		{},
 		{},
 		{},
@@ -195,7 +204,7 @@ test.serial('failing to submit for moderation', async t => {
 
 test.serial('full submit', async t => {
 	t.context.responses = [
-		{ 'x-opera-csrf-token': 'foo' },
+		'<input type="hidden" name="csrfmiddlewaretoken" value="foo" />',
 		{},
 		{},
 		{},
@@ -210,7 +219,7 @@ test.serial('full submit', async t => {
 
 	t.deepEqual(r[0].match, ['/account/login']);
 
-	t.deepEqual(r[1].match, ['/account/login?service=auth']);
+	t.deepEqual(r[1].match, ['/account/login']);
 
 	t.deepEqual(r[2].match, ['/developer/']);
 
