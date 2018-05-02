@@ -1,6 +1,6 @@
 {
   "name": "opera-extension-deploy",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Deploy Opera extensions to the Opera Store. (hacky)",
   "main": "index.js",
   "scripts": {
