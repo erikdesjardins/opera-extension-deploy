@@ -238,7 +238,7 @@ test.serial('full submit', async t => {
 	t.is(r[5].headers['Referer'], 'https://addons.opera.com/developer/package/42/?tab=versions');
 	t.true('X-Csrftoken' in r[5].headers);
 	t.deepEqual(r[5].params, {
-		file_id: '__opera-ext-depl__',
+		file_id: '4-packagezip',
 		file_name: 'package.zip',
 		metadata_from: '1.2.3',
 	});

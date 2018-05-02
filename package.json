@@ -1,6 +1,6 @@
 {
   "name": "opera-extension-deploy",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Deploy Opera extensions to the Opera Store. (hacky)",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "ava": "^0.18.1",
     "coveralls": "^2.11.8",
     "nyc": "^10.1.2",
-    "superagent-mock": "^3.2.0"
+    "superagent-mock": "3.5.0"
   },
   "dependencies": {
     "superagent": "^3.4.1"

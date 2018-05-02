@@ -72,6 +72,9 @@ module.exports = function deploy(options) {
 			// I've seen [1048576, 1819438] chunks (yes, in that order, which is odd)
 			var CHUNK_SIZE = 1024 * 1024;
 
+			var fileId = zip.length + '-packagezip';
+			var fileName = 'package.zip';
+
 			var requests = [];
 
 			var maxChunk = Math.ceil(zip.length / CHUNK_SIZE);
@@ -87,43 +90,43 @@ module.exports = function deploy(options) {
 					.field('flowChunkSize', CHUNK_SIZE)
 					.field('flowCurrentChunkSize', currentSlice.length)
 					.field('flowTotalSize', zip.length)
-					.field('flowIdentifier', '__opera-ext-depl__')
-					.field('flowFilename', 'package.zip')
-					.field('flowRelativePath', 'package.zip')
+					.field('flowIdentifier', fileId)
+					.field('flowFilename', fileName)
+					.field('flowRelativePath', fileName)
 					.field('flowTotalChunks', maxChunk)
-					.attach('file', currentSlice, 'package.zip'));
+					.attach('file', currentSlice, fileName));
 			}
 
 			return Promise.all(requests)
 				.then(function(response) {
-					// success
+					return { fileId, fileName };
 				}, function(err) {
 					throw new Error('Failed to upload package: ' + (err.response.body.detail || err.response.status));
 				});
 		})
 		// get addon info
-		.then(function() {
+		.then(function({ fileId, fileName }) {
 			return request
 				.get('https://addons.opera.com/api/developer/packages/' + id)
 				.set('Accept', 'application/json; version=1.0')
 				.set('X-Csrftoken', (request.jar.getCookie('csrftoken', { path: '/' }) || {}).value)
 				.set('Referer', 'https://addons.opera.com/developer/package/' + id + '/?tab=versions')
 				.then(function(response) {
-					return response.body;
+					return { addonInfo: response.body, fileId, fileName };
 				}, function(err) {
 					throw new Error('Failed to fetch addon info: ' + (err.response.body.detail || err.response.status));
 				});
 		})
 		// create new version
-		.then(function(addonInfo) {
+		.then(function({ addonInfo, fileId, fileName }) {
 			return request
 				.post('https://addons.opera.com/api/developer/package-versions/?package_id=' + id)
 				.set('Accept', 'application/json; version=1.0')
 				.set('X-Csrftoken', (request.jar.getCookie('csrftoken', { path: '/' }) || {}).value)
 				.set('Referer', 'https://addons.opera.com/developer/package/' + id + '/?tab=versions')
 				.send({
-					file_id: '__opera-ext-depl__',
-					file_name: 'package.zip',
+					file_id: fileId,
+					file_name: fileName,
 					metadata_from: addonInfo.versions[0].version
 				})
 				.then(function(response) {
