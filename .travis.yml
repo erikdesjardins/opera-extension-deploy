@@ -1,8 +1,7 @@
 language: node_js
 node_js:
-  - 7
+  - 8
   - 6
-  - 4
 branches:
   only:
     - master
@@ -18,4 +17,4 @@ deploy:
     secure: O5KrykpeU/uPHdGfq7cMkfcA1ZzFhq0KPsZZKtx+VikfJGbUidUTRy39Xsv/dSfT6hNGBRaj2zj/EqEpF7GckUsBvKvQxxLi/TZB3ho5k2xAQ0SpDmb2XrQfUTj0GYd3Zs5YBWRVYEQQRSvytItgxQSI23un/30D4kDiN2cThDEnBBjgWMweyabmMB85mB4r1pty5bqiUqCH68uvRriR7mZSfLv0yCjizb6702ZlXI5JD1z6N6ex1o3oxGiBnQ5Xyyss2NRCr/tAll7F7zJS2ElnnVLfYYU64LHtHxx3dsavd26iN9Z7B7iOzfk+0gDvJZayX7oQ7epatI23E+rljwnioK9kkmiOvv6TyXVx/KzfIoyAmJ3dwuTxZ0D08Jn76S1jI0rSLR68ouYujKL504awW8XnVdVQxP4jr6nmKeyEh3AcwkXG11Pw7JfQD8dwBjDzbYSAFkkr0Yi1MmyIP/Pz8SvYLoROFirOAa2YMq/tDxhMkI0sYbkN+oXm05+k7jqZBOgONCsPqMNVqUEXGjqtK+EzSijhAGBuzGMv2IJXD5L8LnwA3SqoGj6o1u3zo2off1UGgB57iWeiNhaeTI0nIVIOnXiKe7INUPNRFG/i42MplRyZhrY2HbII9EphAZeTG15oU6U55zBs6MkPeGbKjU4gg8CRfYZROIBxPAA=
   on:
     tags: true
-    node: 7
+    node: 8
