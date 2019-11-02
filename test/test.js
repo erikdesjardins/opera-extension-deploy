@@ -49,22 +49,22 @@ test.afterEach(t => {
 });
 
 test.serial('missing fields', async t => {
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ password: 'q', id: 'q', zip: Buffer.from([]) }),
 		'Missing required field: username'
 	);
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', id: 'q', zip: Buffer.from([]) }),
 		'Missing required field: password'
 	);
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', zip: Buffer.from([]) }),
 		'Missing required field: id'
 	);
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q' }),
 		'Missing required field: zip'
 	);
@@ -73,7 +73,7 @@ test.serial('missing fields', async t => {
 test.serial('failing login initial load', async t => {
 	t.context.responses = [new ResponseError({}, 503)];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
 		'Failed to fetch login page: 503'
 	);
@@ -84,7 +84,7 @@ test.serial('failing login initial load', async t => {
 test.serial('failing login csrf token', async t => {
 	t.context.responses = [''];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
 		'No CSRF token found.'
 	);
@@ -95,7 +95,7 @@ test.serial('failing login csrf token', async t => {
 test.serial('empty login csrf token', async t => {
 	t.context.responses = ['<input type="hidden" name="csrfmiddlewaretoken" value="" />'];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
 		'No CSRF token found.'
 	);
@@ -109,7 +109,7 @@ test.serial('failing login', async t => {
 		new ResponseError({}, 403)
 	];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
 		'Failed to login: 403'
 	);
@@ -124,7 +124,7 @@ test.serial('failing versions page fetch', async t => {
 		new ResponseError({}, 403)
 	];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([]) }),
 		'Failed to fetch versions page: 403'
 	);
@@ -140,7 +140,7 @@ test.serial('failing upload', async t => {
 		new ResponseError({ detail: 'errorCode' })
 	];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([1]) }),
 		'Failed to upload package: errorCode'
 	);
@@ -157,7 +157,7 @@ test.serial('failing addon info', async t => {
 		new ResponseError({ detail: 'errorCode' })
 	];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([1]) }),
 		'Failed to fetch addon info: errorCode'
 	);
@@ -175,7 +175,7 @@ test.serial('failing version creation', async t => {
 		new ResponseError({ detail: 'errorCode' })
 	];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([1]) }),
 		'Failed to create new version: errorCode'
 	);
@@ -194,7 +194,7 @@ test.serial('failing to submit for moderation', async t => {
 		new ResponseError({ detail: 'errorCode' })
 	];
 
-	await t.throws(
+	await t.throwsAsync(
 		deploy({ username: 'q', password: 'q', id: 'q', zip: Buffer.from([1]) }),
 		'Failed to submit for moderation: errorCode'
 	);
