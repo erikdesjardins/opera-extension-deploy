@@ -4,7 +4,9 @@
   "description": "Deploy Opera extensions to the Opera Store. (hacky)",
   "main": "index.js",
   "scripts": {
-    "test": "ava test/test.js"
+    "test": "ava test/test.js",
+    "test-coverage": "nyc npm test",
+    "report-coverage": "nyc report --reporter=text --reporter=html"
   },
   "repository": {
     "type": "git",
@@ -17,9 +19,8 @@
   },
   "homepage": "https://github.com/erikdesjardins/opera-extension-deploy#readme",
   "devDependencies": {
-    "ava": "^0.18.1",
-    "coveralls": "^2.11.8",
-    "nyc": "^10.1.2",
+    "ava": "^2.4.0",
+    "nyc": "^14.1.1",
     "superagent-mock": "3.5.0"
   },
   "dependencies": {

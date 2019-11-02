@@ -1,4 +1,4 @@
-# opera-extension-deploy [![Build Status](https://travis-ci.org/erikdesjardins/opera-extension-deploy.svg?branch=master)](https://travis-ci.org/erikdesjardins/opera-extension-deploy) [![Coverage Status](https://coveralls.io/repos/github/erikdesjardins/opera-extension-deploy/badge.svg?branch=master)](https://coveralls.io/github/erikdesjardins/opera-extension-deploy?branch=master)
+# opera-extension-deploy
 
 Deploy Opera extensions to the Opera Store. (hacky)
 
